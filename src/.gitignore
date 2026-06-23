@@ -1,0 +1,8 @@
+node_modules
+.env
+dist
+build
+android/app/build
+ios/build
+coverage
+.vscode
