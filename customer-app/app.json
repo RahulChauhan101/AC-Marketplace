@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "ACCare Customer",
+    "slug": "accare-customer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "accarecustomer",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "ACCare uses your location to show nearby AC servicemen."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#2563EB"
+      },
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "config": {
+        "googleMaps": {
+          "apiKey": "${EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}"
+        }
+      }
+    },
+    "plugins": ["expo-location"]
+  }
+}

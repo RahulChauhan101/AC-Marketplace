@@ -1,0 +1,8 @@
+{
+  "name": "ac-marketplace-serviceman-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "echo \"Serviceman app scaffold is ready. Add React Native implementation here.\""
+  }
+}

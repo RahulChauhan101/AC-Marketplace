@@ -1,28 +1,23 @@
 {
   "name": "ac-marketplace",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "private": true,
+  "description": "Monorepo for AC Service Marketplace backend, customer web, customer app, serviceman app and admin panel.",
+  "workspaces": [
+    "backend",
+    "customer-web",
+    "customer-app",
+    "serviceman-app",
+    "admin-panel"
+  ],
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.7.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
+    "backend:dev": "npm --prefix backend run dev",
+    "backend:start": "npm --prefix backend start",
+    "backend:seed:admin": "npm --prefix backend run seed:admin",
+    "customer-web:dev": "npm --prefix customer-web run dev",
+    "customer-web:build": "npm --prefix customer-web run build",
+    "customer-app:start": "npm --prefix customer-app start",
+    "serviceman-app:start": "npm --prefix serviceman-app start",
+    "admin-panel:dev": "npm --prefix admin-panel run dev"
   }
 }

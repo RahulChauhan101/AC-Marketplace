@@ -1,0 +1,9 @@
+{
+  "name": "ac-marketplace-admin-panel",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo \"Admin panel scaffold is ready. Add React implementation here.\"",
+    "build": "echo \"Admin panel build is not configured yet.\""
+  }
+}
