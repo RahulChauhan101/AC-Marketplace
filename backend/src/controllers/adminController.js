@@ -5,6 +5,20 @@ const User = require("../models/User");
 const asyncHandler = require("../utils/asyncHandler");
 const { AppError } = require("../middleware/errorMiddleware");
 
+const sanitizeUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  phone: user.phone,
+  address: user.address,
+  serviceCategories: user.serviceCategories,
+  serviceArea: user.serviceArea,
+  isAvailable: user.isAvailable,
+  isActive: user.isActive,
+  createdAt: user.createdAt,
+});
+
 const getDashboard = asyncHandler(async (req, res) => {
   const [
     users,
@@ -41,6 +55,37 @@ const getDashboard = asyncHandler(async (req, res) => {
       reviews,
       revenue: (paidPayments[0]?.revenue || 0) / 100,
       currency: "INR",
+    },
+  });
+});
+
+const createAdmin = asyncHandler(async (req, res) => {
+  const { name, email, password, phone, address } = req.body;
+
+  if (!name || !email || !password) {
+    throw new AppError("Name, email and password are required", 400);
+  }
+
+  const existingUser = await User.findOne({ email });
+
+  if (existingUser) {
+    throw new AppError("User already exists", 409);
+  }
+
+  const admin = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    address,
+    role: "admin",
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Admin created successfully",
+    data: {
+      user: sanitizeUser(admin),
     },
   });
 });
@@ -98,6 +143,7 @@ const updateUserStatus = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  createAdmin,
   getDashboard,
   getUsers,
   updateUserStatus,

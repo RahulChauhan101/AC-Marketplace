@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const {
   assignServiceman,
   cancelBooking,
@@ -6,12 +7,30 @@ const {
   getBookingById,
   getBookings,
   updateBookingStatus,
+  getAvailableBookings,
 } = require("../controllers/bookingController");
 const { authorize, protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
+const validateBookingId = (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid booking id",
+    });
+  }
+
+  return next();
+};
+
 router.use(protect);
+
+router.get(
+  "/available",
+  authorize("serviceman", "admin"),
+  getAvailableBookings
+);
 
 router
   .route("/")
@@ -20,10 +39,11 @@ router
 
 router
   .route("/:id")
+  .all(validateBookingId)
   .get(getBookingById)
   .patch(authorize("serviceman", "admin"), updateBookingStatus);
 
-router.patch("/:id/assign", authorize("admin"), assignServiceman);
-router.patch("/:id/cancel", authorize("customer", "admin"), cancelBooking);
+router.patch("/:id/assign", validateBookingId, authorize("admin"), assignServiceman);
+router.patch("/:id/cancel", validateBookingId, authorize("customer", "admin"), cancelBooking);
 
 module.exports = router;

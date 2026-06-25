@@ -1,7 +1,10 @@
 require("dotenv").config();
 
+const configureDns = require("../config/dns");
 const connectDB = require("../config/db");
 const User = require("../models/User");
+
+configureDns();
 
 const createAdmin = async () => {
   const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;

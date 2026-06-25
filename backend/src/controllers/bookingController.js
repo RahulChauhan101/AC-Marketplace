@@ -221,6 +221,19 @@ const cancelBooking = asyncHandler(async (req, res) => {
   });
 });
 
+const getAvailableBookings = asyncHandler(async (req, res) => {
+  const bookings = await Booking.find({
+    status: "pending",
+    serviceman: { $exists: false },
+  }).populate("customer", "name phone");
+
+  res.json({
+    success: true,
+    count: bookings.length,
+    data: bookings,
+  });
+});
+
 module.exports = {
   createBooking,
   getBookings,
@@ -228,4 +241,5 @@ module.exports = {
   assignServiceman,
   updateBookingStatus,
   cancelBooking,
+  getAvailableBookings,
 };

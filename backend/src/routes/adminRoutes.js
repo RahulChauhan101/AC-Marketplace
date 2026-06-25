@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  createAdmin,
   getDashboard,
   getUsers,
   updateUserStatus,
@@ -10,6 +11,12 @@ const router = express.Router();
 
 router.use(protect, authorize("admin"));
 
+router.post(
+  "/create-admin",
+  protect,
+  authorize("admin"),
+  createAdmin
+);
 router.get("/dashboard", getDashboard);
 router.get("/users", getUsers);
 router.patch("/users/:id", updateUserStatus);

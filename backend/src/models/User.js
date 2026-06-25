@@ -42,7 +42,25 @@ const userSchema = new mongoose.Schema(
     serviceCategories: [
       {
         type: String,
-        enum: ["installation", "repair", "maintenance", "gas-refill", "inspection"],
+        enum: [
+          "installation",
+          "repair",
+          "maintenance",
+          "gas-refill",
+          "inspection",
+          "electronics-repair",
+          "tv-repair",
+          "fridge-repair",
+          "ac-repair",
+          "cooler-repair",
+          "fan-repair",
+          "microwave-oven-repair",
+          "light-repair",
+          "electrician",
+          "water-purifier-repair",
+          "plumber",
+          "gas-stove-repair",
+        ],
       },
     ],
     serviceArea: {
@@ -63,13 +81,12 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function hashPassword(next) {
+userSchema.pre("save", async function hashPassword() {
   if (!this.isModified("password")) {
-    return next();
+    return;
   }
 
   this.password = await bcrypt.hash(this.password, 12);
-  return next();
 });
 
 userSchema.methods.comparePassword = function comparePassword(candidatePassword) {
