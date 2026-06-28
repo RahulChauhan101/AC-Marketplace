@@ -20,10 +20,25 @@ const formatDate = (value) =>
       }).format(new Date(value))
     : "Not scheduled";
 
+const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
 export default function BookingHistory() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [processingPaymentId, setProcessingPaymentId] = useState("");
 
   const loadBookings = async () => {
     setLoading(true);
@@ -55,6 +70,66 @@ export default function BookingHistory() {
       loadBookings();
     } catch (err) {
       setError(err.response?.data?.message || "Unable to cancel booking.");
+    }
+  };
+
+  const payNow = async (booking) => {
+    setError("");
+    setProcessingPaymentId(booking._id);
+
+    try {
+      const scriptLoaded = await loadRazorpayScript();
+
+      if (!scriptLoaded) {
+        setError("Unable to load Razorpay checkout. Please try again.");
+        return;
+      }
+
+      const { data } = await api.post(`/payments/bookings/${booking._id}/order`);
+      const { keyId, order } = data.data;
+
+      const checkout = new window.Razorpay({
+        key: keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: "AC Service Marketplace",
+        description: `${booking.serviceType?.replace("-", " ")} service payment`,
+        order_id: order.id,
+        prefill: {
+          name: booking.customer?.name,
+          email: booking.customer?.email,
+          contact: booking.customer?.phone,
+        },
+        notes: {
+          bookingId: booking._id,
+        },
+        handler: async (response) => {
+          try {
+            await api.post("/payments/razorpay/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            await loadBookings();
+          } catch (err) {
+            setError(err.response?.data?.message || "Payment verification failed.");
+          } finally {
+            setProcessingPaymentId("");
+          }
+        },
+        modal: {
+          ondismiss: () => setProcessingPaymentId(""),
+        },
+        theme: {
+          color: "#2563eb",
+        },
+      });
+
+      checkout.open();
+    } catch (err) {
+      setError(err.response?.data?.message || "Unable to start payment.");
+      setProcessingPaymentId("");
     }
   };
 
@@ -134,14 +209,26 @@ export default function BookingHistory() {
                     </div>
                   </div>
 
-                  {!["completed", "cancelled"].includes(booking.status) && (
-                    <button
-                      onClick={() => cancelBooking(booking._id)}
-                      className="btn-secondary mt-5 border-red-200 text-red-700 hover:border-red-300 hover:text-red-800"
-                    >
-                      Cancel Booking
-                    </button>
-                  )}
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    {booking.paymentStatus !== "paid" && booking.pricing?.totalAmount > 0 && (
+                      <button
+                        onClick={() => payNow(booking)}
+                        disabled={processingPaymentId === booking._id}
+                        className="btn-primary disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        {processingPaymentId === booking._id ? "Opening payment..." : "Pay Now"}
+                      </button>
+                    )}
+
+                    {!["completed", "cancelled"].includes(booking.status) && (
+                      <button
+                        onClick={() => cancelBooking(booking._id)}
+                        className="btn-secondary border-red-200 text-red-700 hover:border-red-300 hover:text-red-800"
+                      >
+                        Cancel Booking
+                      </button>
+                    )}
+                  </div>
                 </article>
               ))}
             </div>

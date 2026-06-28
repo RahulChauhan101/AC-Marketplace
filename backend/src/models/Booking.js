@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const serviceCategories = require("../constants/serviceCategories");
 
 const bookingSchema = new mongoose.Schema(
   {
@@ -13,7 +14,7 @@ const bookingSchema = new mongoose.Schema(
     },
     serviceType: {
       type: String,
-      enum: ["installation", "repair", "maintenance", "gas-refill", "inspection"],
+      enum: serviceCategories,
       required: true,
     },
     issueDescription: {

@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  changePassword,
   getMe,
   login,
   register,
@@ -13,5 +14,6 @@ router.post("/register", register);
 router.post("/login", login);
 router.get("/me", protect, getMe);
 router.patch("/me", protect, updateProfile);
+router.patch("/change-password", protect, changePassword);
 
 module.exports = router;
