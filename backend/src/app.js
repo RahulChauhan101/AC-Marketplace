@@ -44,7 +44,7 @@ app.use(
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "AC Service Marketplace API is running",
+    message: "ServiceWale API is running",
     version: "1.0.0",
   });
 });

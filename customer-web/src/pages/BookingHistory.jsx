@@ -36,16 +36,32 @@ const loadRazorpayScript = () =>
 
 export default function BookingHistory() {
   const [bookings, setBookings] = useState([]);
+  const [reviewsByBooking, setReviewsByBooking] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [processingPaymentId, setProcessingPaymentId] = useState("");
+
+  const loadReviews = async () => {
+    const { data } = await api.get("/reviews/me");
+    const nextReviewsByBooking = {};
+
+    data.data.reviews.forEach((review) => {
+      const bookingId = review.booking?._id || review.booking;
+
+      if (bookingId) {
+        nextReviewsByBooking[bookingId] = review;
+      }
+    });
+
+    setReviewsByBooking(nextReviewsByBooking);
+  };
 
   const loadBookings = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const { data } = await api.get("/bookings");
+      const [{ data }] = await Promise.all([api.get("/bookings"), loadReviews()]);
       setBookings(data.data.bookings);
     } catch (err) {
       setError(err.response?.data?.message || "Unable to load bookings.");
@@ -73,6 +89,40 @@ export default function BookingHistory() {
     }
   };
 
+  const createReview = async (bookingId) => {
+    const rating = window.prompt("Rating 1 to 5?");
+
+    if (rating === null) {
+      return;
+    }
+
+    const numericRating = Number(rating);
+
+    if (!Number.isInteger(numericRating) || numericRating < 1 || numericRating > 5) {
+      setError("Rating must be a number between 1 and 5.");
+      return;
+    }
+
+    const comment = window.prompt("Write your review comment:");
+
+    if (comment === null) {
+      return;
+    }
+
+    try {
+      await api.post("/reviews", {
+        bookingId,
+        rating: numericRating,
+        comment,
+      });
+
+      await loadReviews();
+      setError("");
+    } catch (err) {
+      setError(err.response?.data?.message || "Unable to submit review.");
+    }
+  };
+
   const payNow = async (booking) => {
     setError("");
     setProcessingPaymentId(booking._id);
@@ -92,7 +142,7 @@ export default function BookingHistory() {
         key: keyId,
         amount: order.amount,
         currency: order.currency,
-        name: "AC Service Marketplace",
+        name: "ServiceWale",
         description: `${booking.serviceType?.replace("-", " ")} service payment`,
         order_id: order.id,
         prefill: {
@@ -137,7 +187,7 @@ export default function BookingHistory() {
     <>
       <PageHeader
         eyebrow="Booking history"
-        title="Track all your AC service requests."
+        title="Track all your ServiceWale bookings."
         description="View schedules, assigned servicemen, payment status and booking progress."
       />
 
@@ -188,6 +238,11 @@ export default function BookingHistory() {
                       <p className="mt-3 text-sm font-semibold text-slate-500">
                         Scheduled: {formatDate(booking.scheduledAt)}
                       </p>
+                      {booking.status === "completed" && (
+                        <p className="mt-1 text-sm font-semibold text-green-700">
+                          Completed: {formatDate(booking.completedAt)}
+                        </p>
+                      )}
                       <p className="mt-1 text-sm text-slate-500">
                         {booking.address?.street}, {booking.address?.city},{" "}
                         {booking.address?.pincode}
@@ -227,6 +282,21 @@ export default function BookingHistory() {
                       >
                         Cancel Booking
                       </button>
+                    )}
+
+                    {booking.status === "completed" && booking.serviceman && (
+                      reviewsByBooking[booking._id] ? (
+                        <span className="rounded-xl bg-green-50 px-4 py-2 text-sm font-bold text-green-700">
+                          Reviewed: {reviewsByBooking[booking._id].rating}/5
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => createReview(booking._id)}
+                          className="btn-secondary"
+                        >
+                          Leave Review
+                        </button>
+                      )
                     )}
                   </div>
                 </article>

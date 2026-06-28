@@ -1,7 +1,7 @@
 {
-  "name": "ac-marketplace-backend",
+  "name": "servicewale-backend",
   "version": "1.0.0",
-  "description": "Node.js Express API for AC Service Marketplace.",
+  "description": "Node.js Express API for ServiceWale.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

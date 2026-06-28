@@ -8,6 +8,12 @@ const stats = [
   ["100%", "verified partners"],
 ];
 
+const bookingSteps = [
+  { label: "Select service", to: "/services" },
+  { label: "Choose schedule", to: "/booking" },
+  { label: "Track booking", to: "/bookings" },
+];
+
 export default function Home() {
   return (
     <>
@@ -15,14 +21,14 @@ export default function Home() {
         <div className="container-page grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-brand-600">
-              AC Service Marketplace
+              ServiceWale
             </p>
             <h1 className="text-5xl font-black tracking-tight text-slate-950 md:text-6xl">
-              Book trusted AC technicians near you.
+              Book trusted service professionals near you.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              ACCare connects customers with verified servicemen for AC repair,
-              installation, gas refill, maintenance and inspection.
+              ServiceWale connects customers with verified servicemen for repair,
+              installation, maintenance, plumbing, electrical and appliance services.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link to="/booking" className="btn-primary">
@@ -37,18 +43,22 @@ export default function Home() {
           <div className="card relative p-6">
             <div className="rounded-2xl bg-slate-950 p-6 text-white">
               <p className="text-sm text-cyan-200">Live booking estimate</p>
-              <h2 className="mt-3 text-3xl font-black">AC not cooling?</h2>
+              <h2 className="mt-3 text-3xl font-black">Need a trusted technician?</h2>
               <p className="mt-3 text-slate-300">
                 Get an expert visit scheduled today with upfront pricing and status tracking.
               </p>
               <div className="mt-6 space-y-3">
-                {["Select service", "Choose schedule", "Track booking"].map((item, index) => (
-                  <div key={item} className="flex items-center gap-3 rounded-xl bg-white/10 p-3">
+                {bookingSteps.map((step, index) => (
+                  <Link
+                    key={step.label}
+                    to={step.to}
+                    className="flex items-center gap-3 rounded-xl bg-white/10 p-3 transition hover:bg-white/20"
+                  >
                     <span className="grid h-8 w-8 place-items-center rounded-full bg-cyan-400 text-sm font-black text-slate-950">
                       {index + 1}
                     </span>
-                    <span className="font-semibold">{item}</span>
-                  </div>
+                    <span className="font-semibold">{step.label}</span>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -75,7 +85,7 @@ export default function Home() {
                 Popular services
               </p>
               <h2 className="mt-2 text-3xl font-black text-slate-950">
-                Everything your AC needs
+                Everything your home needs
               </h2>
             </div>
             <Link to="/services" className="btn-secondary">

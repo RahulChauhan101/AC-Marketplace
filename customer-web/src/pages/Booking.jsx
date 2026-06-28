@@ -82,8 +82,8 @@ export default function Booking() {
     <>
       <PageHeader
         eyebrow="Book service"
-        title="Schedule your AC service visit."
-        description="Tell us what you need, where the AC is located and when a technician should visit."
+        title="Schedule your ServiceWale visit."
+        description="Tell us what you need, where service is required and when a technician should visit."
       />
 
       <section className="py-12">
@@ -143,14 +143,14 @@ export default function Booking() {
                 className="input mt-2 min-h-28"
                 value={form.issueDescription}
                 onChange={(event) => updateField("issueDescription", event.target.value)}
-                placeholder="Example: AC runs but does not cool, water leakage from indoor unit..."
+                placeholder="Example: appliance not working, leakage, wiring issue..."
                 required
               />
             </div>
 
             <div>
               <label className="label" htmlFor="brand">
-                AC brand
+                Brand
               </label>
               <input
                 id="brand"
@@ -184,7 +184,7 @@ export default function Booking() {
             </div>
             <div>
               <label className="label" htmlFor="acType">
-                AC type
+                Appliance type
               </label>
               <select
                 id="acType"

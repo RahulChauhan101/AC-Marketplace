@@ -32,7 +32,7 @@ export default function Login() {
         <div className="card p-8">
           <h1 className="text-3xl font-black text-slate-950">Login to your account</h1>
           <p className="mt-2 text-slate-600">
-            Track bookings, update your profile and book AC services faster.
+            Track bookings, update your profile and book services faster.
           </p>
 
           {error && (
@@ -74,7 +74,7 @@ export default function Login() {
           </form>
 
           <p className="mt-6 text-center text-sm text-slate-600">
-            New to ACCare?{" "}
+            New to ServiceWale?{" "}
             <Link to="/register" className="font-bold text-brand-700">
               Create an account
             </Link>

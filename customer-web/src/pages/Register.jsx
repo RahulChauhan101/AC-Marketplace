@@ -55,7 +55,7 @@ export default function Register() {
         <div className="card p-8">
           <h1 className="text-3xl font-black text-slate-950">Create customer account</h1>
           <p className="mt-2 text-slate-600">
-            Register once and manage all your AC service bookings from one place.
+            Register once and manage all your ServiceWale bookings from one place.
           </p>
 
           {error && (

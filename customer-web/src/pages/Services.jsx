@@ -8,8 +8,8 @@ export default function Services() {
     <>
       <PageHeader
         eyebrow="Services"
-        title="AC services for homes, shops and offices."
-        description="Choose the service you need and book a verified AC professional with clear status tracking."
+        title="Services for homes, shops and offices."
+        description="Choose the service you need and book a verified ServiceWale professional with clear status tracking."
       />
 
       <section className="py-12">

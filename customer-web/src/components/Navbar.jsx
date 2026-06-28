@@ -24,9 +24,9 @@ export default function Navbar() {
       <nav className="container-page flex min-h-16 items-center justify-between gap-4 py-3">
         <Link to="/" className="flex items-center gap-2 text-xl font-black text-slate-950">
           <span className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-600 text-white">
-            AC
+            SW
           </span>
-          ACCare
+          ServiceWale
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">

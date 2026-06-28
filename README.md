@@ -1,6 +1,6 @@
-# AC Service Marketplace
+# ServiceWale
 
-Monorepo for an AC service marketplace with backend APIs, customer web, customer mobile app, and placeholders for serviceman/admin apps.
+Monorepo for ServiceWale with backend APIs, customer web, customer mobile app, and placeholders for serviceman/admin apps.
 
 ## Folder Structure
 

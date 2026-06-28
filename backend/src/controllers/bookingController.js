@@ -147,6 +147,35 @@ const assignServiceman = asyncHandler(async (req, res) => {
   });
 });
 
+const acceptBooking = asyncHandler(async (req, res) => {
+  const booking = await Booking.findById(req.params.id);
+
+  if (!booking) {
+    throw new AppError("Booking not found", 404);
+  }
+
+  if (booking.serviceman) {
+    throw new AppError("Booking is already assigned", 400);
+  }
+
+  if (booking.status !== "pending") {
+    throw new AppError("Only pending bookings can be accepted", 400);
+  }
+
+  booking.serviceman = req.user._id;
+  booking.status = "confirmed";
+  await booking.save();
+
+  const updatedBooking = await populateBooking(Booking.findById(booking._id));
+
+  res.json({
+    success: true,
+    data: {
+      booking: updatedBooking,
+    },
+  });
+});
+
 const updateBookingStatus = asyncHandler(async (req, res) => {
   const { status, servicemanNote, adminNote } = req.body;
   const allowedStatuses = ["pending", "confirmed", "in_progress", "completed", "cancelled"];
@@ -235,6 +264,7 @@ const getAvailableBookings = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  acceptBooking,
   createBooking,
   getBookings,
   getBookingById,

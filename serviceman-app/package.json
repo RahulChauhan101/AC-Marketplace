@@ -1,8 +1,22 @@
 {
-  "name": "ac-marketplace-serviceman-app",
+  "name": "servicewale-serviceman-app",
   "version": "1.0.0",
   "private": true,
+  "main": "expo/AppEntry",
   "scripts": {
-    "start": "echo \"Serviceman app scaffold is ready. Add React Native implementation here.\""
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "axios": "^1.18.1",
+    "expo": "latest",
+    "expo-status-bar": "latest",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-web": "^0.21.2"
   }
 }

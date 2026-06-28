@@ -1,17 +1,14 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-import { API_URL } from "../utils/env";
-
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-api.interceptors.request.use(async (config) => {
-  const token = await AsyncStorage.getItem("ac_customer_token");
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("servicewale_admin_token");
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -22,9 +19,10 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
+  (error) => {
     if (error.response?.status === 401) {
-      await AsyncStorage.multiRemove(["ac_customer_token", "ac_customer_user"]);
+      localStorage.removeItem("servicewale_admin_token");
+      localStorage.removeItem("servicewale_admin_user");
     }
 
     return Promise.reject(error);

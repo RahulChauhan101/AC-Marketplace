@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "ServiceWale Serviceman",
+    "slug": "servicewale-serviceman",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "com.servicewale.serviceman"
+    }
+  }
+}

@@ -11,8 +11,8 @@ export default function Layout() {
       </main>
       <footer className="border-t border-slate-200 bg-white py-8">
         <div className="container-page flex flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} ACCare Marketplace</p>
-          <p>Trusted AC repair, installation, gas refill and maintenance.</p>
+          <p>© {new Date().getFullYear()} ServiceWale</p>
+          <p>Trusted home services, repairs, installation and maintenance.</p>
         </div>
       </footer>
     </div>

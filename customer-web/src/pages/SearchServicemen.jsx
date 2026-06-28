@@ -3,20 +3,22 @@ import { Link } from "react-router-dom";
 
 import api from "../services/api";
 import PageHeader from "../components/PageHeader";
+import { useAuth } from "../context/AuthContext";
 import { services } from "../services/serviceTypes";
 
 export default function SearchServicemen() {
-  const [filters, setFilters] = useState({ city: "", serviceType: "" });
+  const { user } = useAuth();
+  const [filters, setFilters] = useState({ city: "", pincode: "", serviceType: "" });
   const [servicemen, setServicemen] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchServicemen = async () => {
+  const fetchServicemen = async (nextFilters = filters) => {
     setLoading(true);
     setError("");
 
     try {
-      const { data } = await api.get("/servicemen", { params: filters });
+      const { data } = await api.get("/servicemen", { params: nextFilters });
       setServicemen(data.data.servicemen);
     } catch (err) {
       setError(err.response?.data?.message || "Unable to load servicemen.");
@@ -35,22 +37,39 @@ export default function SearchServicemen() {
     fetchServicemen();
   };
 
+  const useMyAddress = () => {
+    const nextFilters = {
+      ...filters,
+      city: user?.address?.city || "",
+      pincode: user?.address?.pincode || "",
+    };
+
+    setFilters(nextFilters);
+    fetchServicemen(nextFilters);
+  };
+
   return (
     <>
       <PageHeader
         eyebrow="Nearby servicemen"
-        title="Find verified AC professionals in your city."
-        description="Filter by city and service type to discover available technicians before placing a booking."
+        title="Find available servicemen near you."
+        description="Search by pincode, city and service type. Exact pincode matches appear first."
       />
 
       <section className="py-12">
         <div className="container-page">
-          <form onSubmit={handleSubmit} className="card grid gap-4 p-5 md:grid-cols-[1fr_1fr_auto]">
+          <form onSubmit={handleSubmit} className="card grid gap-4 p-5 lg:grid-cols-[1fr_1fr_1fr_auto]">
             <input
               className="input"
-              placeholder="City, e.g. Delhi"
+              placeholder="City, e.g. Ahmedabad"
               value={filters.city}
               onChange={(event) => setFilters({ ...filters, city: event.target.value })}
+            />
+            <input
+              className="input"
+              placeholder="Pincode, e.g. 382350"
+              value={filters.pincode}
+              onChange={(event) => setFilters({ ...filters, pincode: event.target.value })}
             />
             <select
               className="input"
@@ -70,6 +89,12 @@ export default function SearchServicemen() {
               {loading ? "Searching..." : "Search"}
             </button>
           </form>
+
+          {user?.address && (
+            <button onClick={useMyAddress} className="btn-secondary mt-4">
+              Use my saved address
+            </button>
+          )}
 
           {error && (
             <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
@@ -91,6 +116,13 @@ export default function SearchServicemen() {
                     Available
                   </span>
                 </div>
+                <p className="mt-3 text-sm font-semibold text-brand-700">
+                  {serviceman.nearbyMatch === "pincode"
+                    ? "Nearest match: your pincode"
+                    : serviceman.nearbyMatch === "city"
+                      ? "Nearby match: your city"
+                      : "Available serviceman"}
+                </p>
 
                 <div className="mt-5 flex flex-wrap gap-2">
                   {(serviceman.serviceCategories || []).map((category) => (
@@ -106,6 +138,12 @@ export default function SearchServicemen() {
                 <p className="mt-5 text-sm text-slate-600">
                   Phone: {serviceman.phone || "Shared after booking"}
                 </p>
+                <p className="mt-2 text-sm text-slate-600">
+                  Pincodes:{" "}
+                  {serviceman.serviceArea?.pincodes?.length
+                    ? serviceman.serviceArea.pincodes.join(", ")
+                    : "Not listed"}
+                </p>
                 <Link to="/booking" className="btn-primary mt-6 w-full">
                   Book Service
                 </Link>
@@ -115,7 +153,7 @@ export default function SearchServicemen() {
 
           {!loading && servicemen.length === 0 && (
             <div className="card mt-8 p-8 text-center text-slate-600">
-              No servicemen found. Try a different city or service type.
+              No servicemen found. Try a different pincode, city or service type.
             </div>
           )}
         </div>

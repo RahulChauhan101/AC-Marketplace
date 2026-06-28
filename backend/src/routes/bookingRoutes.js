@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const {
+  acceptBooking,
   assignServiceman,
   cancelBooking,
   createBooking,
@@ -44,6 +45,7 @@ router
   .patch(authorize("serviceman", "admin"), updateBookingStatus);
 
 router.patch("/:id/assign", validateBookingId, authorize("admin"), assignServiceman);
+router.patch("/:id/accept", validateBookingId, authorize("serviceman"), acceptBooking);
 router.patch("/:id/cancel", validateBookingId, authorize("customer", "admin"), cancelBooking);
 
 module.exports = router;
