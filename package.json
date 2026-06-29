@@ -2,12 +2,13 @@
   "name": "servicewale",
   "version": "1.0.0",
   "private": true,
-  "description": "Monorepo for ServiceWale backend, customer web, customer app, serviceman app and admin panel.",
+  "description": "Monorepo for ServiceWale backend, customer web, customer app, serviceman mobile/web and admin panel.",
   "workspaces": [
     "backend",
     "customer-web",
     "customer-app",
     "serviceman-app",
+    "serviceman-web",
     "admin-panel"
   ],
   "overrides": {
@@ -22,6 +23,9 @@
     "customer-web:build": "npm --prefix customer-web run build",
     "customer-app:start": "npm --prefix customer-app start",
     "serviceman-app:start": "npm --prefix serviceman-app start",
+    "serviceman-app:android": "npm --prefix serviceman-app run android",
+    "serviceman-web:dev": "npm --prefix serviceman-web run dev",
+    "serviceman-web:build": "npm --prefix serviceman-web run build",
     "admin-panel:dev": "npm --prefix admin-panel run dev"
   },
   "dependencies": {

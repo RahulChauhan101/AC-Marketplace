@@ -1,8 +1,8 @@
 # servicewale-serviceman-app
 
-Expo React Native mobile app for ServiceWale servicemen.
+Expo React Native **mobile app** for ServiceWale servicemen (Android/iOS).
 
-This project is **mobile-only**. Do not deploy it to Vercel. Use Expo for local development and Android/iOS builds.
+For the browser version, use **`serviceman-web`**.
 
 ## Run locally
 
@@ -20,10 +20,7 @@ npm run serviceman-app:start
 
 ## API
 
-| Platform | Backend URL |
-|----------|-------------|
-| Android emulator | `http://10.0.2.2:5000/api` |
-| Expo Web (`localhost:8082`) | `http://localhost:5000/api` |
+The app talks to the backend at `http://10.0.2.2:5000/api` on Android emulator.
 
 Start the backend first:
 
