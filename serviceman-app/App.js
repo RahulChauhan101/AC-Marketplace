@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   loadingText: {
-    color: "#2563EB",
+    color: "#F97316",
     fontSize: 18,
     fontWeight: "900",
   },
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   tabButtonActive: {
-    backgroundColor: "#2563EB",
+    backgroundColor: "#F97316",
   },
   tabText: {
     color: "#64748B",

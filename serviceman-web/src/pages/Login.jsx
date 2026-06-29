@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
@@ -34,8 +35,7 @@ export default function Login() {
   return (
     <div className="login-page">
       <form className="card login-card" onSubmit={submit}>
-        <div className="brand-mark login-logo">SW</div>
-        <p className="eyebrow">ServiceWale</p>
+        <BrandLogo className="login-brand" />
         <h1 className="page-title">Serviceman Login</h1>
         <p className="muted">
           Sign in with your serviceman account to manage bookings and status updates.

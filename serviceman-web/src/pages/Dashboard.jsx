@@ -1,3 +1,4 @@
+import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard({ onNavigate }) {
@@ -6,7 +7,7 @@ export default function Dashboard({ onNavigate }) {
   return (
     <div className="page-stack">
       <section className="hero-card">
-        <p className="hero-eyebrow">ServiceWale</p>
+        <BrandLogo className="hero-brand" />
         <h2 className="hero-title">Hi {user?.name?.split(" ")[0] || "Serviceman"}</h2>
         <p className="hero-text">
           {user?.isAvailable ? "You are available for bookings." : "You are currently unavailable."}

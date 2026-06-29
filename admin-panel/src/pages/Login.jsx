@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
@@ -25,10 +26,7 @@ export default function Login() {
   return (
     <section className="login-page">
       <div className="card login-card">
-        <div className="brand">
-          <span className="brand-mark">SW</span>
-          <span>ServiceWale</span>
-        </div>
+        <BrandLogo className="login-brand" />
         <h1 className="page-title">Admin Login</h1>
         <p className="muted">Use an admin account to manage users and bookings.</p>
 

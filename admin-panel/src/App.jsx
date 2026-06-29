@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import BrandLogo from "./components/BrandLogo";
 import { useAuth } from "./context/AuthContext";
 import Bookings from "./pages/Bookings";
 import CreateAdmin from "./pages/CreateAdmin";
@@ -45,10 +46,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand">
-          <span className="brand-mark">SW</span>
-          <span>ServiceWale</span>
-        </div>
+        <BrandLogo />
         <p className="muted">Admin Panel</p>
 
         <nav className="nav">

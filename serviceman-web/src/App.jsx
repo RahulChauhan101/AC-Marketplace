@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import BrandLogo from "./components/BrandLogo";
 import { useAuth } from "./context/AuthContext";
 import AvailableBookings from "./pages/AvailableBookings";
 import Dashboard from "./pages/Dashboard";
@@ -45,10 +46,7 @@ export default function App() {
   return (
     <div className="mobile-shell">
       <header className="topbar">
-        <div className="brand">
-          <span className="brand-mark">SW</span>
-          <span>ServiceWale Serviceman</span>
-        </div>
+        <BrandLogo suffix=" Serviceman" />
       </header>
 
       <main className="mobile-content">{renderPage()}</main>

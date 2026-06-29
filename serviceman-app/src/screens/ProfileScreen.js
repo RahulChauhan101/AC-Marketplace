@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   chip: {
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "#FFEDD5",
     borderRadius: 999,
-    color: "#1D4ED8",
+    color: "#EA580C",
     fontSize: 12,
     fontWeight: "800",
     overflow: "hidden",

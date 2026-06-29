@@ -6,7 +6,7 @@ import PageHeader from "../components/PageHeader";
 
 const statusStyles = {
   pending: "bg-yellow-50 text-yellow-700",
-  confirmed: "bg-blue-50 text-blue-700",
+  confirmed: "bg-brand-50 text-brand-700",
   in_progress: "bg-purple-50 text-purple-700",
   completed: "bg-green-50 text-green-700",
   cancelled: "bg-red-50 text-red-700",
@@ -172,7 +172,7 @@ export default function BookingHistory() {
           ondismiss: () => setProcessingPaymentId(""),
         },
         theme: {
-          color: "#2563eb",
+          color: "#f97316",
         },
       });
 

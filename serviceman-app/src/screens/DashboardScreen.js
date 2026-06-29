@@ -1,5 +1,6 @@
 import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 export default function DashboardScreen({ onNavigate }) {
@@ -12,7 +13,7 @@ export default function DashboardScreen({ onNavigate }) {
       style={styles.screen}
     >
       <View style={styles.hero}>
-        <Text style={styles.eyebrow}>ServiceWale</Text>
+        <BrandLogo light />
         <Text style={styles.title}>Hi {user?.name?.split(" ")[0] || "Serviceman"}</Text>
         <Text style={styles.subtitle}>
           {user?.isAvailable ? "You are available for bookings." : "You are currently unavailable."}
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   cardTitle: {
-    color: "#2563EB",
+    color: "#F97316",
     fontSize: 24,
     fontWeight: "900",
     marginTop: 6,
@@ -89,18 +90,12 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
-  eyebrow: {
-    color: "#BFDBFE",
-    fontWeight: "900",
-    letterSpacing: 2,
-    textTransform: "uppercase",
-  },
   grid: {
     gap: 14,
     marginTop: 16,
   },
   hero: {
-    backgroundColor: "#2563EB",
+    backgroundColor: "#F97316",
     borderRadius: 28,
     padding: 24,
   },
@@ -118,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   subtitle: {
-    color: "#DBEAFE",
+    color: "#FFEDD5",
     fontSize: 16,
     marginTop: 8,
   },
@@ -126,6 +121,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 34,
     fontWeight: "900",
-    marginTop: 8,
+    marginTop: 12,
   },
 });

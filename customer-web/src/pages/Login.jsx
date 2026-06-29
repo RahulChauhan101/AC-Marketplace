@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
@@ -30,6 +31,7 @@ export default function Login() {
     <section className="py-16">
       <div className="container-page max-w-xl">
         <div className="card p-8">
+          <BrandLogo className="login-brand" />
           <h1 className="text-3xl font-black text-slate-950">Login to your account</h1>
           <p className="mt-2 text-slate-600">
             Track bookings, update your profile and book services faster.

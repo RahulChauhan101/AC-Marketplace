@@ -40,16 +40,38 @@ button {
   font-weight: 900;
 }
 
-.brand-mark,
-.login-logo {
+.brand-mark {
   display: grid;
   height: 44px;
   width: 44px;
   place-items: center;
   border-radius: 16px;
-  background: #2563eb;
+  background: #f97316;
   color: #fff;
   font-weight: 900;
+}
+
+.brand-name {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.brand-accent {
+  color: #f97316;
+}
+
+.brand-suffix {
+  color: #64748b;
+  font-weight: 700;
+}
+
+.login-brand {
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.login-brand .brand-name {
+  font-size: 22px;
 }
 
 .mobile-content {
@@ -76,7 +98,7 @@ button {
 }
 
 .tab-bar button.active {
-  background: #2563eb;
+  background: #f97316;
   color: #fff;
 }
 
@@ -125,18 +147,17 @@ button {
 
 .hero-card {
   border-radius: 28px;
-  background: #2563eb;
+  background: #f97316;
   color: #fff;
   padding: 24px;
 }
 
-.hero-eyebrow {
-  margin: 0;
-  color: #bfdbfe;
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+.hero-brand {
+  margin-bottom: 12px;
+}
+
+.hero-card .brand-name {
+  color: #fff;
 }
 
 .hero-title {
@@ -147,7 +168,7 @@ button {
 
 .hero-text {
   margin: 8px 0 0;
-  color: #dbeafe;
+  color: #ffedd5;
 }
 
 .grid {
@@ -186,7 +207,7 @@ button {
   justify-content: center;
   border: 0;
   border-radius: 14px;
-  background: #2563eb;
+  background: #f97316;
   color: #fff;
   padding: 12px 16px;
   font-weight: 800;
@@ -220,7 +241,7 @@ button {
 
 .eyebrow {
   margin: 16px 0 0;
-  color: #2563eb;
+  color: #f97316;
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 2px;
@@ -260,8 +281,8 @@ button {
 .badge {
   display: inline-flex;
   border-radius: 999px;
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #ffedd5;
+  color: #ea580c;
   padding: 5px 10px;
   font-size: 12px;
   font-weight: 800;
@@ -298,7 +319,7 @@ button {
 
 .amount {
   margin: 10px 0 0;
-  color: #2563eb;
+  color: #f97316;
   font-size: 16px;
   font-weight: 900;
 }

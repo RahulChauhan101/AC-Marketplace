@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
@@ -53,6 +54,7 @@ export default function Register() {
     <section className="py-16">
       <div className="container-page max-w-3xl">
         <div className="card p-8">
+          <BrandLogo className="login-brand" />
           <h1 className="text-3xl font-black text-slate-950">Create customer account</h1>
           <p className="mt-2 text-slate-600">
             Register once and manage all your ServiceWale bookings from one place.

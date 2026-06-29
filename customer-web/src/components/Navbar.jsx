@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
+import BrandLogo from "./BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
@@ -22,11 +23,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
       <nav className="container-page flex min-h-16 items-center justify-between gap-4 py-3">
-        <Link to="/" className="flex items-center gap-2 text-xl font-black text-slate-950">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-brand-600 text-white">
-            SW
-          </span>
-          ServiceWale
+        <Link to="/">
+          <BrandLogo />
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">

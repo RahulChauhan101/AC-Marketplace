@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 
+import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
 export default function LoginScreen() {
@@ -48,10 +49,7 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.screen}
     >
-      <View style={styles.logo}>
-        <Text style={styles.logoText}>SW</Text>
-      </View>
-      <Text style={styles.eyebrow}>ServiceWale</Text>
+      <BrandLogo centered />
       <Text style={styles.title}>Serviceman Login</Text>
       <Text style={styles.description}>
         Sign in with your serviceman account to manage bookings and status updates.
@@ -110,14 +108,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     textAlign: "center",
   },
-  eyebrow: {
-    color: "#2563EB",
-    fontSize: 13,
-    fontWeight: "900",
-    letterSpacing: 2,
-    marginTop: 20,
-    textTransform: "uppercase",
-  },
   input: {
     backgroundColor: "#FFFFFF",
     borderColor: "#CBD5E1",
@@ -127,19 +117,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     width: "100%",
-  },
-  logo: {
-    alignItems: "center",
-    backgroundColor: "#2563EB",
-    borderRadius: 24,
-    height: 72,
-    justifyContent: "center",
-    width: 72,
-  },
-  logoText: {
-    color: "#FFFFFF",
-    fontSize: 26,
-    fontWeight: "900",
   },
   screen: {
     alignItems: "center",
@@ -153,6 +130,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "900",
     marginBottom: 10,
-    marginTop: 8,
+    marginTop: 24,
   },
 });

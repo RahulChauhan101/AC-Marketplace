@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+import BrandLogo from "../components/BrandLogo";
 import { services } from "../services/serviceTypes";
 
 const stats = [
@@ -17,12 +18,12 @@ const bookingSteps = [
 export default function Home() {
   return (
     <>
-      <section className="overflow-hidden bg-gradient-to-br from-brand-50 via-white to-cyan-50 py-20">
+      <section className="overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-50 py-20">
         <div className="container-page grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-brand-600">
-              ServiceWale
-            </p>
+            <div className="mb-4">
+              <BrandLogo />
+            </div>
             <h1 className="text-5xl font-black tracking-tight text-slate-950 md:text-6xl">
               Book trusted service professionals near you.
             </h1>
@@ -42,7 +43,7 @@ export default function Home() {
 
           <div className="card relative p-6">
             <div className="rounded-2xl bg-slate-950 p-6 text-white">
-              <p className="text-sm text-cyan-200">Live booking estimate</p>
+              <p className="text-sm text-orange-200">Live booking estimate</p>
               <h2 className="mt-3 text-3xl font-black">Need a trusted technician?</h2>
               <p className="mt-3 text-slate-300">
                 Get an expert visit scheduled today with upfront pricing and status tracking.
@@ -54,7 +55,7 @@ export default function Home() {
                     to={step.to}
                     className="flex items-center gap-3 rounded-xl bg-white/10 p-3 transition hover:bg-white/20"
                   >
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-cyan-400 text-sm font-black text-slate-950">
+                    <span className="grid h-8 w-8 place-items-center rounded-full bg-orange-400 text-sm font-black text-slate-950">
                       {index + 1}
                     </span>
                     <span className="font-semibold">{step.label}</span>

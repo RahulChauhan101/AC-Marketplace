@@ -37,7 +37,7 @@ export default function BookingCard({ actionLabel, booking, loading, onAction })
 
 const styles = StyleSheet.create({
   amount: {
-    color: "#2563EB",
+    color: "#F97316",
     fontSize: 16,
     fontWeight: "900",
     marginTop: 10,
@@ -79,9 +79,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   status: {
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "#FFEDD5",
     borderRadius: 999,
-    color: "#1D4ED8",
+    color: "#EA580C",
     fontSize: 12,
     fontWeight: "800",
     overflow: "hidden",
