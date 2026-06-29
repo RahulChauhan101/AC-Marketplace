@@ -20,10 +20,21 @@ npm run serviceman-app:start
 
 ## API
 
-The app talks to the backend at `http://10.0.2.2:5000/api` on Android emulator. Start the backend first:
+| Platform | Backend URL |
+|----------|-------------|
+| Android emulator | `http://10.0.2.2:5000/api` |
+| Expo Web (`localhost:8082`) | `http://localhost:5000/api` |
+
+Start the backend first:
 
 ```bash
 npm run backend:dev
+```
+
+If login fails on emulator, run:
+
+```bash
+adb reverse tcp:5000 tcp:5000
 ```
 
 ## Login

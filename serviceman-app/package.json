@@ -4,10 +4,10 @@
   "private": true,
   "main": "expo/AppEntry",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
+    "start": "expo start --port 8082",
+    "android": "expo start --android --go --port 8082",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web --port 8082"
   },
   "dependencies": {
     "@expo/metro-runtime": "~56.0.15",

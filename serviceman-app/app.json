@@ -7,7 +7,8 @@
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "package": "com.servicewale.serviceman"
+      "package": "com.servicewale.serviceman",
+      "usesCleartextTraffic": true
     }
   }
 }

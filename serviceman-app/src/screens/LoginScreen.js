@@ -17,19 +17,27 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const submit = async () => {
     if (!email || !password) {
-      Alert.alert("Missing details", "Enter email and password.");
+      setErrorMessage("Enter email and password.");
       return;
     }
 
     setLoading(true);
+    setErrorMessage("");
 
     try {
       await login({ email, password });
     } catch (error) {
-      Alert.alert("Login failed", error.response?.data?.message || error.message);
+      const message =
+        error.response?.data?.message || error.message || "Login failed. Try again.";
+      setErrorMessage(message);
+
+      if (Platform.OS !== "web") {
+        Alert.alert("Login failed", message);
+      }
     } finally {
       setLoading(false);
     }
@@ -68,6 +76,8 @@ export default function LoginScreen() {
       <TouchableOpacity disabled={loading} onPress={submit} style={styles.button}>
         <Text style={styles.buttonText}>{loading ? "Logging in..." : "Login"}</Text>
       </TouchableOpacity>
+
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
     </KeyboardAvoidingView>
   );
 }
@@ -91,6 +101,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,
+    textAlign: "center",
+  },
+  errorText: {
+    color: "#DC2626",
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 16,
     textAlign: "center",
   },
   eyebrow: {
