@@ -1,10 +1,26 @@
+import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 
 import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 import { formatService } from "../utils/formatters";
 
 export default function ProfileScreen() {
   const { updateProfile, user } = useAuth();
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const { data } = await api.get("/reviews/me");
+        setReviews(data.data.reviews || []);
+      } catch {
+        setReviews([]);
+      }
+    };
+
+    loadReviews();
+  }, []);
 
   const toggleAvailability = async (value) => {
     try {
@@ -13,6 +29,11 @@ export default function ProfileScreen() {
       Alert.alert("Update failed", error.response?.data?.message || "Please try again.");
     }
   };
+
+  const averageRating =
+    reviews.length === 0
+      ? "0.0"
+      : (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1);
 
   return (
     <ScrollView contentContainerStyle={styles.content} style={styles.screen}>
@@ -57,6 +78,22 @@ export default function ProfileScreen() {
           ))}
         </View>
       </View>
+
+      <View style={styles.card}>
+        <Text style={styles.label}>Customer Ratings</Text>
+        <Text style={styles.rating}>{averageRating}/5 average from {reviews.length} reviews</Text>
+        {reviews.length === 0 ? (
+          <Text style={styles.text}>No customer ratings yet.</Text>
+        ) : (
+          reviews.map((review) => (
+            <View key={review._id} style={styles.reviewItem}>
+              <Text style={styles.rating}>{review.rating}/5</Text>
+              <Text style={styles.text}>{review.customer?.name || "Customer"}</Text>
+              <Text style={styles.text}>{review.comment || "No comment provided."}</Text>
+            </View>
+          ))
+        )}
+      </View>
     </ScrollView>
   );
 }
@@ -98,6 +135,18 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "900",
     marginTop: 6,
+  },
+  rating: {
+    color: "#F97316",
+    fontSize: 18,
+    fontWeight: "900",
+    marginTop: 8,
+  },
+  reviewItem: {
+    borderTopColor: "#E2E8F0",
+    borderTopWidth: 1,
+    marginTop: 12,
+    paddingTop: 12,
   },
   row: {
     alignItems: "center",

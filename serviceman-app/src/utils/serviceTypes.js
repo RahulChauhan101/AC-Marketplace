@@ -1,19 +1,6 @@
-export const serviceTypes = [
-  { id: "installation", label: "AC Installation" },
-  { id: "repair", label: "AC Repair" },
-  { id: "maintenance", label: "AC Maintenance" },
-  { id: "gas-refill", label: "Gas Refill" },
-  { id: "inspection", label: "AC Inspection" },
-  { id: "electronics-repair", label: "Electronics Repair" },
-  { id: "tv-repair", label: "TV Repair" },
-  { id: "fridge-repair", label: "Fridge Repair" },
-  { id: "ac-repair", label: "AC Repair Service" },
-  { id: "cooler-repair", label: "Cooler Repair" },
-  { id: "fan-repair", label: "Fan Repair" },
-  { id: "microwave-oven-repair", label: "Microwave Oven Repair" },
-  { id: "light-repair", label: "Light Repair" },
-  { id: "electrician", label: "Electrician" },
-  { id: "water-purifier-repair", label: "Water Purifier Repair" },
-  { id: "plumber", label: "Plumber" },
-  { id: "gas-stove-repair", label: "Gas Stove Repair" },
-];
+export {
+  getServiceLabel,
+  getServiceLogo,
+  SERVICE_LOGOS,
+  serviceTypes,
+} from "../../../shared/serviceCatalog.js";

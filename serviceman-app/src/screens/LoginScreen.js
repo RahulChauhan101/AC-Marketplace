@@ -13,7 +13,7 @@ import {
 import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
-export default function LoginScreen() {
+export default function LoginScreen({ onGoRegister }) {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -75,6 +75,12 @@ export default function LoginScreen() {
         <Text style={styles.buttonText}>{loading ? "Logging in..." : "Login"}</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity onPress={onGoRegister} style={styles.linkButton}>
+        <Text style={styles.linkText}>
+          New serviceman? <Text style={styles.linkAccent}>Register</Text>
+        </Text>
+      </TouchableOpacity>
+
       {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
     </KeyboardAvoidingView>
   );
@@ -117,6 +123,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     width: "100%",
+  },
+  linkAccent: {
+    color: "#EA580C",
+    fontWeight: "900",
+  },
+  linkButton: {
+    marginTop: 16,
+    paddingVertical: 8,
+  },
+  linkText: {
+    color: "#64748B",
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
   },
   screen: {
     alignItems: "center",

@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema(
     serviceCategories: [
       {
         type: String,
+        // Keep in sync with shared/serviceCatalog.js and User model enum
         enum: [
           "installation",
           "repair",
@@ -74,6 +75,32 @@ const userSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    profilePhoto: String,
+    businessLogo: String,
+    serviceImages: [String],
+    experienceYears: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    idProof: {
+      aadharNumber: String,
+      drivingLicenseNumber: String,
+      voterIdNumber: String,
+      aadharImage: String,
+      drivingLicenseImage: String,
+      voterIdImage: String,
+      experienceCertificateImage: String,
+    },
+    subscription: {
+      freeServicesUsed: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      subscriptionPaidAt: Date,
+      subscriptionExpiresAt: Date,
     },
   },
   {

@@ -1,6 +1,8 @@
 const Booking = require("../models/Booking");
 const User = require("../models/User");
 const asyncHandler = require("../utils/asyncHandler");
+const { returnUpdatedDocument } = require("../utils/mongooseOptions");
+const { canAcceptMoreServices, hasActiveSubscription } = require("../utils/subscription");
 const { AppError } = require("../middleware/errorMiddleware");
 
 const populateBooking = (query) =>
@@ -73,7 +75,7 @@ const getBookings = asyncHandler(async (req, res) => {
 
   const bookings = await populateBooking(
     Booking.find(filters).sort({ scheduledAt: -1, createdAt: -1 })
-  );
+  ).exec();
 
   res.json({
     success: true,
@@ -131,7 +133,7 @@ const assignServiceman = asyncHandler(async (req, res) => {
           currency: "INR",
         },
       },
-      { new: true, runValidators: true }
+      returnUpdatedDocument
     )
   );
 
@@ -148,6 +150,15 @@ const assignServiceman = asyncHandler(async (req, res) => {
 });
 
 const acceptBooking = asyncHandler(async (req, res) => {
+  const serviceman = await User.findById(req.user._id);
+
+  if (!canAcceptMoreServices(serviceman)) {
+    throw new AppError(
+      "Free service limit reached. Pay Rs 99 once for 1 year unlimited services on ServiceWale.",
+      402
+    );
+  }
+
   const booking = await Booking.findById(req.params.id);
 
   if (!booking) {
@@ -166,7 +177,13 @@ const acceptBooking = asyncHandler(async (req, res) => {
   booking.status = "confirmed";
   await booking.save();
 
-  const updatedBooking = await populateBooking(Booking.findById(booking._id));
+  if (!hasActiveSubscription(serviceman)) {
+    await User.findByIdAndUpdate(req.user._id, {
+      $inc: { "subscription.freeServicesUsed": 1 },
+    });
+  }
+
+  const updatedBooking = await populateBooking(Booking.findById(booking._id)).exec();
 
   res.json({
     success: true,

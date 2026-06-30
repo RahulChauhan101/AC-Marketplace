@@ -11,3 +11,5 @@ coverage
 .expo
 **/.expo
 .vscode
+backend/uploads
+**/uploads

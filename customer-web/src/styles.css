@@ -22,11 +22,11 @@ body {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-md active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-brand-500 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-brand-500 hover:text-brand-700 hover:shadow-md active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .input {
@@ -63,5 +63,45 @@ body {
 
   .login-brand .brand-name {
     @apply text-[22px];
+  }
+
+  .toast {
+    @apply fixed bottom-6 right-6 z-50 max-w-sm rounded-2xl px-5 py-4 text-sm font-bold text-white shadow-lg;
+  }
+
+  .toast-info {
+    @apply bg-slate-900;
+  }
+
+  .toast-success {
+    @apply bg-green-600;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4;
+  }
+
+  .modal-card {
+    @apply w-full max-w-md rounded-3xl bg-white p-6 shadow-xl;
+  }
+
+  .modal-title {
+    @apply text-2xl font-black text-slate-950;
+  }
+
+  .modal-actions {
+    @apply mt-6 flex flex-wrap justify-end gap-3;
+  }
+
+  .rating-stars {
+    @apply mt-4 flex gap-2;
+  }
+
+  .star {
+    @apply text-3xl text-slate-300 transition;
+  }
+
+  .star.active {
+    @apply text-orange-500;
   }
 }

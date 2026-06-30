@@ -2,15 +2,22 @@ const mongoose = require("mongoose");
 
 const paymentSchema = new mongoose.Schema(
   {
+    paymentType: {
+      type: String,
+      enum: ["booking", "subscription"],
+      default: "booking",
+    },
     booking: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Booking",
-      required: true,
     },
     customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+    },
+    serviceman: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     razorpayOrderId: {
       type: String,
@@ -43,5 +50,6 @@ const paymentSchema = new mongoose.Schema(
 
 paymentSchema.index({ customer: 1, createdAt: -1 });
 paymentSchema.index({ booking: 1, createdAt: -1 });
+paymentSchema.index({ serviceman: 1, createdAt: -1 });
 
 module.exports = mongoose.model("Payment", paymentSchema);

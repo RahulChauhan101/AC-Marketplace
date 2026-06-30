@@ -3,7 +3,7 @@ import { useState } from "react";
 import BrandLogo from "../components/BrandLogo";
 import { useAuth } from "../context/AuthContext";
 
-export default function Login() {
+export default function Login({ onGoRegister }) {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,6 +58,10 @@ export default function Login() {
 
         <button className="btn orange login-button" disabled={loading} type="submit">
           {loading ? "Logging in..." : "Login"}
+        </button>
+
+        <button className="auth-link" onClick={onGoRegister} type="button">
+          New serviceman? <span>Register</span>
         </button>
 
         {errorMessage ? <p className="error inline-error">{errorMessage}</p> : null}

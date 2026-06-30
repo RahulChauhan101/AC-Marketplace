@@ -16,8 +16,8 @@ export default function Services() {
         <div className="container-page grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
             <article key={service.id} className="card flex flex-col p-6">
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 font-black text-brand-700">
-                {service.title.charAt(0)}
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-2xl">
+                {service.logo}
               </div>
               <h2 className="mt-5 text-2xl font-black text-slate-950">{service.title}</h2>
               <p className="mt-3 flex-1 leading-7 text-slate-600">{service.description}</p>

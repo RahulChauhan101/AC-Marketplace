@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 
 import api from "../services/api";
 import PageHeader from "../components/PageHeader";
+import RatingModal from "../components/RatingModal";
+import { useToast } from "../components/Toast";
+import { formatBookingStatus, getServicemanCardTitle, getServicemanDetails, shouldShowServicemanContact } from "../utils/bookingStatus";
 
 const statusStyles = {
   pending: "bg-yellow-50 text-yellow-700",
@@ -35,11 +38,13 @@ const loadRazorpayScript = () =>
   });
 
 export default function BookingHistory() {
+  const { showToast } = useToast();
   const [bookings, setBookings] = useState([]);
   const [reviewsByBooking, setReviewsByBooking] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [processingPaymentId, setProcessingPaymentId] = useState("");
+  const [ratingBooking, setRatingBooking] = useState(null);
 
   const loadReviews = async () => {
     const { data } = await api.get("/reviews/me");
@@ -72,6 +77,9 @@ export default function BookingHistory() {
 
   useEffect(() => {
     loadBookings();
+    const intervalId = window.setInterval(loadBookings, 10000);
+
+    return () => window.clearInterval(intervalId);
   }, []);
 
   const cancelBooking = async (bookingId) => {
@@ -89,38 +97,11 @@ export default function BookingHistory() {
     }
   };
 
-  const createReview = async (bookingId) => {
-    const rating = window.prompt("Rating 1 to 5?");
-
-    if (rating === null) {
-      return;
-    }
-
-    const numericRating = Number(rating);
-
-    if (!Number.isInteger(numericRating) || numericRating < 1 || numericRating > 5) {
-      setError("Rating must be a number between 1 and 5.");
-      return;
-    }
-
-    const comment = window.prompt("Write your review comment:");
-
-    if (comment === null) {
-      return;
-    }
-
-    try {
-      await api.post("/reviews", {
-        bookingId,
-        rating: numericRating,
-        comment,
-      });
-
-      await loadReviews();
-      setError("");
-    } catch (err) {
-      setError(err.response?.data?.message || "Unable to submit review.");
-    }
+  const submitReview = async ({ bookingId, rating, comment }) => {
+    await api.post("/reviews", { bookingId, rating, comment });
+    await loadReviews();
+    showToast("Thank you for rating your serviceman.", "success");
+    setError("");
   };
 
   const payNow = async (booking) => {
@@ -185,6 +166,13 @@ export default function BookingHistory() {
 
   return (
     <>
+      <RatingModal
+        booking={ratingBooking}
+        onClose={() => setRatingBooking(null)}
+        onSubmit={submitReview}
+        open={Boolean(ratingBooking)}
+      />
+
       <PageHeader
         eyebrow="Booking history"
         title="Track all your ServiceWale bookings."
@@ -213,7 +201,11 @@ export default function BookingHistory() {
             </div>
           ) : (
             <div className="space-y-5">
-              {bookings.map((booking) => (
+              {bookings.map((booking) => {
+                const servicemanDetails = getServicemanDetails(booking);
+                const showContact = shouldShowServicemanContact(booking);
+
+                return (
                 <article key={booking._id} className="card p-6">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
@@ -226,12 +218,32 @@ export default function BookingHistory() {
                             statusStyles[booking.status] || "bg-slate-100 text-slate-700"
                           }`}
                         >
-                          {booking.status?.replace("_", " ")}
+                          {formatBookingStatus(booking.status)}
                         </span>
                         <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
                           Payment: {booking.paymentStatus}
                         </span>
                       </div>
+                      {showContact && servicemanDetails ? (
+                        <div className="mt-4 rounded-2xl border border-brand-100 bg-brand-50 p-4">
+                          <p className="text-sm font-bold text-brand-700">
+                            {getServicemanCardTitle(booking.status)}
+                          </p>
+                          <p className="mt-1 text-lg font-black text-slate-950">
+                            {servicemanDetails.name}
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-slate-700">
+                            Mobile: {servicemanDetails.phone}
+                          </p>
+                        </div>
+                      ) : booking.status === "pending" ? (
+                        <div className="mt-4 rounded-2xl border border-yellow-100 bg-yellow-50 p-4">
+                          <p className="text-sm font-bold text-yellow-700">Waiting for acceptance</p>
+                          <p className="mt-1 text-sm text-yellow-800">
+                            Serviceman name and mobile will appear here once your work is accepted.
+                          </p>
+                        </div>
+                      ) : null}
                       <p className="mt-3 leading-7 text-slate-600">
                         {booking.issueDescription}
                       </p>
@@ -250,12 +262,20 @@ export default function BookingHistory() {
                     </div>
 
                     <div className="min-w-56 rounded-2xl bg-slate-50 p-4">
-                      <p className="text-sm font-bold text-slate-500">Assigned serviceman</p>
-                      <p className="mt-1 font-black text-slate-950">
-                        {booking.serviceman?.name || "Pending assignment"}
+                      <p className="text-sm font-bold text-slate-500">
+                        {showContact && servicemanDetails
+                          ? booking.status === "confirmed"
+                            ? "Accepted by"
+                            : "Serviceman"
+                          : "Serviceman"}
                       </p>
-                      <p className="mt-1 text-sm text-slate-500">
-                        {booking.serviceman?.phone || "Contact not available"}
+                      <p className="mt-1 font-black text-slate-950">
+                        {servicemanDetails?.name || "Waiting for acceptance"}
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-700">
+                        {servicemanDetails?.phone
+                          ? `Mobile: ${servicemanDetails.phone}`
+                          : "Mobile will show after acceptance"}
                       </p>
                       <p className="mt-4 text-sm font-bold text-slate-500">Total</p>
                       <p className="text-xl font-black text-brand-700">
@@ -286,21 +306,27 @@ export default function BookingHistory() {
 
                     {booking.status === "completed" && booking.serviceman && (
                       reviewsByBooking[booking._id] ? (
-                        <span className="rounded-xl bg-green-50 px-4 py-2 text-sm font-bold text-green-700">
-                          Reviewed: {reviewsByBooking[booking._id].rating}/5
-                        </span>
+                        <div className="rounded-xl bg-green-50 px-4 py-3 text-sm">
+                          <p className="font-bold text-green-700">
+                            Your rating: {reviewsByBooking[booking._id].rating}/5
+                          </p>
+                          <p className="mt-1 text-green-800">
+                            {reviewsByBooking[booking._id].comment || "Thanks for using ServiceWale."}
+                          </p>
+                        </div>
                       ) : (
                         <button
-                          onClick={() => createReview(booking._id)}
+                          onClick={() => setRatingBooking(booking)}
                           className="btn-secondary"
                         >
-                          Leave Review
+                          Rate Serviceman
                         </button>
                       )
                     )}
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

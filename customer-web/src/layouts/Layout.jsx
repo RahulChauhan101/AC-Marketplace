@@ -1,10 +1,36 @@
 import { Outlet } from "react-router-dom";
+import { useState } from "react";
 
+import BookingNotificationWatcher from "../components/BookingNotificationWatcher";
 import Navbar from "../components/Navbar";
+import RatingModal from "../components/RatingModal";
+import { ToastProvider, useToast } from "../components/Toast";
+import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 
-export default function Layout() {
+function LayoutContent() {
+  const { isAuthenticated } = useAuth();
+  const { showToast } = useToast();
+  const [ratingBooking, setRatingBooking] = useState(null);
+
+  const submitReview = async ({ bookingId, rating, comment }) => {
+    await api.post("/reviews", { bookingId, rating, comment });
+    showToast("Thank you for rating your serviceman.", "success");
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
+      {isAuthenticated ? (
+        <BookingNotificationWatcher onCompletedBooking={setRatingBooking} />
+      ) : null}
+
+      <RatingModal
+        booking={ratingBooking}
+        onClose={() => setRatingBooking(null)}
+        onSubmit={submitReview}
+        open={Boolean(ratingBooking)}
+      />
+
       <Navbar />
       <main>
         <Outlet />
@@ -16,5 +42,13 @@ export default function Layout() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function Layout() {
+  return (
+    <ToastProvider>
+      <LayoutContent />
+    </ToastProvider>
   );
 }

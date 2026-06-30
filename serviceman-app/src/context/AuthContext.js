@@ -56,6 +56,21 @@ export function AuthProvider({ children }) {
     return authUser;
   };
 
+  const register = async (payload) => {
+    const { data } = await api.post("/auth/register", {
+      ...payload,
+      role: "serviceman",
+    });
+    const authUser = data.data.user;
+
+    if (authUser.role !== "serviceman") {
+      throw new Error("Only serviceman accounts can use this app.");
+    }
+
+    await persistSession(data.token, authUser);
+    return authUser;
+  };
+
   const refreshProfile = async () => {
     const { data } = await api.get("/auth/me");
     setUser(data.data.user);
@@ -84,6 +99,7 @@ export function AuthProvider({ children }) {
       login,
       logout,
       refreshProfile,
+      register,
       token,
       updateProfile,
       user,

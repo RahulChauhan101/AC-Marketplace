@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const Booking = require("../models/Booking");
 const Payment = require("../models/Payment");
 const asyncHandler = require("../utils/asyncHandler");
+const { returnUpdatedDocument } = require("../utils/mongooseOptions");
 const getRazorpay = require("../utils/razorpay");
 const { AppError } = require("../middleware/errorMiddleware");
 
@@ -40,6 +41,7 @@ const createRazorpayOrder = asyncHandler(async (req, res) => {
   });
 
   const payment = await Payment.create({
+    paymentType: "booking",
     booking: booking._id,
     customer: req.user._id,
     razorpayOrderId: order.id,
@@ -100,7 +102,7 @@ const verifyRazorpayPayment = asyncHandler(async (req, res) => {
   const booking = await Booking.findByIdAndUpdate(
     payment.booking,
     { paymentStatus: "paid" },
-    { new: true }
+    returnUpdatedDocument
   );
 
   res.json({

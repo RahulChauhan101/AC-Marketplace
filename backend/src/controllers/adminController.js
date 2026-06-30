@@ -3,21 +3,9 @@ const Payment = require("../models/Payment");
 const Review = require("../models/Review");
 const User = require("../models/User");
 const asyncHandler = require("../utils/asyncHandler");
+const { sanitizeUser } = require("../utils/userSerializer");
+const { returnUpdatedDocument } = require("../utils/mongooseOptions");
 const { AppError } = require("../middleware/errorMiddleware");
-
-const sanitizeUser = (user) => ({
-  id: user._id,
-  name: user.name,
-  email: user.email,
-  role: user.role,
-  phone: user.phone,
-  address: user.address,
-  serviceCategories: user.serviceCategories,
-  serviceArea: user.serviceArea,
-  isAvailable: user.isAvailable,
-  isActive: user.isActive,
-  createdAt: user.createdAt,
-});
 
 const getDashboard = asyncHandler(async (req, res) => {
   const [
@@ -29,6 +17,7 @@ const getDashboard = asyncHandler(async (req, res) => {
     completedBookings,
     paidPayments,
     reviews,
+    ratingStats,
   ] = await Promise.all([
     User.countDocuments(),
     User.countDocuments({ role: "customer" }),
@@ -41,6 +30,14 @@ const getDashboard = asyncHandler(async (req, res) => {
       { $group: { _id: null, revenue: { $sum: "$amount" } } },
     ]),
     Review.countDocuments(),
+    Review.aggregate([
+      {
+        $group: {
+          _id: null,
+          averageRating: { $avg: "$rating" },
+        },
+      },
+    ]),
   ]);
 
   res.json({
@@ -53,6 +50,7 @@ const getDashboard = asyncHandler(async (req, res) => {
       pendingBookings,
       completedBookings,
       reviews,
+      averageRating: Number((ratingStats[0]?.averageRating || 0).toFixed(1)),
       revenue: (paidPayments[0]?.revenue || 0) / 100,
       currency: "INR",
     },
@@ -97,13 +95,35 @@ const getUsers = asyncHandler(async (req, res) => {
     filters.role = req.query.role;
   }
 
-  const users = await User.find(filters).sort({ createdAt: -1 });
+  const users = await User.find(filters).sort({ createdAt: -1 }).lean();
 
   res.json({
     success: true,
     count: users.length,
     data: {
-      users,
+      users: users.map((user) => sanitizeUser({ ...user, _id: user._id })),
+    },
+  });
+});
+
+const getReviews = asyncHandler(async (req, res) => {
+  const reviews = await Review.find()
+    .populate("customer", "name email")
+    .populate("serviceman", "name email phone")
+    .populate("booking", "serviceType completedAt status")
+    .sort({ createdAt: -1 });
+
+  const averageRating =
+    reviews.length === 0
+      ? 0
+      : reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+
+  res.json({
+    success: true,
+    count: reviews.length,
+    data: {
+      averageRating: Number(averageRating.toFixed(1)),
+      reviews,
     },
   });
 });
@@ -125,10 +145,7 @@ const updateUserStatus = asyncHandler(async (req, res) => {
     updates.role = role;
   }
 
-  const user = await User.findByIdAndUpdate(req.params.id, updates, {
-    new: true,
-    runValidators: true,
-  });
+  const user = await User.findByIdAndUpdate(req.params.id, updates, returnUpdatedDocument);
 
   if (!user) {
     throw new AppError("User not found", 404);
@@ -145,6 +162,7 @@ const updateUserStatus = asyncHandler(async (req, res) => {
 module.exports = {
   createAdmin,
   getDashboard,
+  getReviews,
   getUsers,
   updateUserStatus,
 };

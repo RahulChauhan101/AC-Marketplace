@@ -1,20 +1,43 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import BookingCard from "../components/BookingCard";
 import api from "../services/api";
+import { formatService } from "../utils/formatters";
 
 export default function AvailableBookingsScreen() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [acceptingId, setAcceptingId] = useState("");
+  const knownJobIds = useRef(new Set());
+  const initialized = useRef(false);
 
   const loadBookings = useCallback(async () => {
     setLoading(true);
 
     try {
       const { data } = await api.get("/bookings/available");
-      setBookings(data.data || []);
+      const nextBookings = data.data || [];
+
+      if (!initialized.current) {
+        nextBookings.forEach((booking) => knownJobIds.current.add(booking._id));
+        initialized.current = true;
+      } else {
+        const newJobs = nextBookings.filter((booking) => !knownJobIds.current.has(booking._id));
+
+        if (newJobs.length > 0) {
+          const latestJob = newJobs[0];
+          knownJobIds.current.add(latestJob._id);
+          Alert.alert(
+            "New Job Available",
+            `New ${formatService(latestJob.serviceType)} request in ${latestJob.address?.city || "your area"}.`,
+            [{ text: "OK" }]
+          );
+        }
+      }
+
+      nextBookings.forEach((booking) => knownJobIds.current.add(booking._id));
+      setBookings(nextBookings);
     } catch (error) {
       Alert.alert("Unable to load jobs", error.response?.data?.message || "Please try again.");
     } finally {
@@ -24,6 +47,9 @@ export default function AvailableBookingsScreen() {
 
   useEffect(() => {
     loadBookings();
+    const intervalId = setInterval(loadBookings, 20000);
+
+    return () => clearInterval(intervalId);
   }, [loadBookings]);
 
   const acceptBooking = async (booking) => {
@@ -31,7 +57,7 @@ export default function AvailableBookingsScreen() {
 
     try {
       await api.patch(`/bookings/${booking._id}/accept`);
-      Alert.alert("Job accepted", "This booking is now assigned to you.");
+      Alert.alert("Work accepted", "Customer has been notified. This booking is now assigned to you.");
       await loadBookings();
     } catch (error) {
       Alert.alert("Accept failed", error.response?.data?.message || "Please try again.");
@@ -40,28 +66,39 @@ export default function AvailableBookingsScreen() {
     }
   };
 
+  const confirmAccept = (booking) => {
+    Alert.alert(
+      "Accept this work?",
+      `Accept ${formatService(booking.serviceType)} for ${booking.customer?.name || "customer"}?`,
+      [
+        { text: "No", style: "cancel" },
+        { text: "Yes", onPress: () => acceptBooking(booking) },
+      ]
+    );
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.content}
       refreshControl={<RefreshControl onRefresh={loadBookings} refreshing={loading} />}
       style={styles.screen}
     >
-      <Text style={styles.title}>Available Jobs</Text>
+      <Text style={styles.title}>Available Work</Text>
       <Text style={styles.subtitle}>Pending bookings that are not assigned yet.</Text>
 
       {bookings.length === 0 && !loading ? (
         <View style={styles.empty}>
-          <Text style={styles.emptyTitle}>No available jobs</Text>
+          <Text style={styles.emptyTitle}>No available work</Text>
           <Text style={styles.emptyText}>Pull down to refresh when new requests arrive.</Text>
         </View>
       ) : (
         bookings.map((booking) => (
           <BookingCard
-            actionLabel="Accept Job"
+            actionLabel="Accept Work"
             booking={booking}
             key={booking._id}
             loading={acceptingId === booking._id}
-            onAction={acceptBooking}
+            onAction={confirmAccept}
           />
         ))
       )}

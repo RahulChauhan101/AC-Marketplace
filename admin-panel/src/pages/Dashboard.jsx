@@ -8,6 +8,7 @@ const statLabels = {
   customers: "Customers",
   pendingBookings: "Pending",
   reviews: "Reviews",
+  averageRating: "Avg Rating",
   revenue: "Revenue",
   servicemen: "Servicemen",
   users: "Users",
@@ -57,7 +58,11 @@ export default function Dashboard() {
             <article className="card" key={key}>
               <span className="muted">{label}</span>
               <p className="stat-value">
-                {key === "revenue" ? `₹${stats[key] || 0}` : stats[key] || 0}
+                {key === "revenue"
+                  ? `₹${stats[key] || 0}`
+                  : key === "averageRating"
+                    ? `${stats[key] || 0}/5`
+                    : stats[key] || 0}
               </p>
             </article>
           ))}

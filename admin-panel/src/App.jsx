@@ -6,12 +6,14 @@ import Bookings from "./pages/Bookings";
 import CreateAdmin from "./pages/CreateAdmin";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Reviews from "./pages/Reviews";
 import Users from "./pages/Users";
 
 const navItems = [
   { id: "dashboard", label: "Dashboard" },
   { id: "users", label: "Users" },
   { id: "bookings", label: "Bookings" },
+  { id: "reviews", label: "Reviews" },
   { id: "createAdmin", label: "Create Admin" },
 ];
 
@@ -34,6 +36,10 @@ export default function App() {
 
     if (activePage === "bookings") {
       return <Bookings />;
+    }
+
+    if (activePage === "reviews") {
+      return <Reviews />;
     }
 
     if (activePage === "createAdmin") {

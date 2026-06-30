@@ -96,7 +96,10 @@ export default function Home() {
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {services.slice(0, 3).map((service) => (
               <article key={service.id} className="card p-6">
-                <h3 className="text-xl font-black text-slate-950">{service.title}</h3>
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-2xl">
+                  {service.logo}
+                </div>
+                <h3 className="mt-4 text-xl font-black text-slate-950">{service.title}</h3>
                 <p className="mt-3 leading-7 text-slate-600">{service.description}</p>
                 <p className="mt-5 font-bold text-brand-700">{service.price}</p>
               </article>

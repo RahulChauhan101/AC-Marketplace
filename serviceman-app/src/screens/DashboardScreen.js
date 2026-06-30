@@ -30,11 +30,11 @@ export default function DashboardScreen({ onNavigate }) {
 
       <View style={styles.grid}>
         <TouchableOpacity onPress={() => onNavigate("available")} style={styles.action}>
-          <Text style={styles.actionTitle}>Available Jobs</Text>
+          <Text style={styles.actionTitle}>Available Work</Text>
           <Text style={styles.actionText}>Accept open bookings near your service area.</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => onNavigate("jobs")} style={styles.action}>
-          <Text style={styles.actionTitle}>My Jobs</Text>
+          <Text style={styles.actionTitle}>My Work</Text>
           <Text style={styles.actionText}>Start work and mark visits completed.</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => onNavigate("profile")} style={styles.action}>

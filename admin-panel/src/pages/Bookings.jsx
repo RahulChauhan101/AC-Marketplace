@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import api from "../services/api";
+import { formatService } from "../utils/formatters";
 
 const statuses = ["pending", "confirmed", "in_progress", "completed", "cancelled"];
 
@@ -11,8 +12,6 @@ const formatDate = (value) =>
         timeStyle: "short",
       }).format(new Date(value))
     : "Not scheduled";
-
-const formatService = (value) => value?.replace(/-/g, " ") || "Service";
 
 export default function Bookings() {
   const [assignForms, setAssignForms] = useState({});

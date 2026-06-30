@@ -1,6 +1,6 @@
 import { formatDate, formatService } from "../utils/formatters";
 
-export default function BookingCard({ actionLabel, booking, loading, onAction }) {
+export default function BookingCard({ actionLabel, booking, loading, onAction, review }) {
   return (
     <article className="card booking-card">
       <div className="booking-card-header">
@@ -18,6 +18,19 @@ export default function BookingCard({ actionLabel, booking, loading, onAction })
 
       {booking.pricing?.totalAmount > 0 && (
         <p className="amount">Total: ₹{booking.pricing.totalAmount}</p>
+      )}
+
+      {booking.status === "completed" && (
+        <div className="booking-rating">
+          {review ? (
+            <>
+              <p className="review-rating">Customer rating: {review.rating}/5</p>
+              <p className="muted">{review.comment || "No comment provided."}</p>
+            </>
+          ) : (
+            <p className="muted">Waiting for customer rating.</p>
+          )}
+        </div>
       )}
 
       {actionLabel && (

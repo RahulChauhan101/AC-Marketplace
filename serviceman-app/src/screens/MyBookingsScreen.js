@@ -6,11 +6,21 @@ import api from "../services/api";
 
 const nextAction = (status) => {
   if (status === "confirmed") {
-    return { label: "Start Work", status: "in_progress" };
+    return {
+      label: "Start Work",
+      status: "in_progress",
+      title: "Start service work?",
+      message: "Start this job now? The customer will be notified.",
+    };
   }
 
   if (status === "in_progress") {
-    return { label: "Mark Completed", status: "completed" };
+    return {
+      label: "Mark Completed",
+      status: "completed",
+      title: "Complete this service?",
+      message: "Mark this job as completed? The customer can rate your service after this.",
+    };
   }
 
   return null;
@@ -38,13 +48,7 @@ export default function MyBookingsScreen() {
     loadBookings();
   }, [loadBookings]);
 
-  const updateStatus = async (booking) => {
-    const action = nextAction(booking.status);
-
-    if (!action) {
-      return;
-    }
-
+  const updateStatus = async (booking, action) => {
     setUpdatingId(booking._id);
 
     try {
@@ -52,6 +56,13 @@ export default function MyBookingsScreen() {
         status: action.status,
         servicemanNote: `Updated to ${action.status} from serviceman app`,
       });
+
+      if (action.status === "completed") {
+        Alert.alert("Service completed", "Customer will be asked to rate your service.");
+      } else {
+        Alert.alert("Work started", "Customer has been notified.");
+      }
+
       await loadBookings();
     } catch (error) {
       Alert.alert("Update failed", error.response?.data?.message || "Please try again.");
@@ -60,13 +71,26 @@ export default function MyBookingsScreen() {
     }
   };
 
+  const confirmUpdate = (booking) => {
+    const action = nextAction(booking.status);
+
+    if (!action) {
+      return;
+    }
+
+    Alert.alert(action.title, action.message, [
+      { text: "No", style: "cancel" },
+      { text: "Yes", onPress: () => updateStatus(booking, action) },
+    ]);
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.content}
       refreshControl={<RefreshControl onRefresh={loadBookings} refreshing={loading} />}
       style={styles.screen}
     >
-      <Text style={styles.title}>My Jobs</Text>
+      <Text style={styles.title}>My Work</Text>
       <Text style={styles.subtitle}>Bookings assigned to your serviceman account.</Text>
 
       {bookings.length === 0 && !loading ? (
@@ -84,7 +108,7 @@ export default function MyBookingsScreen() {
               booking={booking}
               key={booking._id}
               loading={updatingId === booking._id}
-              onAction={updateStatus}
+              onAction={confirmUpdate}
             />
           );
         })

@@ -2,6 +2,7 @@ const express = require("express");
 const {
   createAdmin,
   getDashboard,
+  getReviews,
   getUsers,
   updateUserStatus,
 } = require("../controllers/adminController");
@@ -18,6 +19,7 @@ router.post(
   createAdmin
 );
 router.get("/dashboard", getDashboard);
+router.get("/reviews", getReviews);
 router.get("/users", getUsers);
 router.patch("/users/:id", updateUserStatus);
 

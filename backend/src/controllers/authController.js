@@ -1,21 +1,9 @@
 const User = require("../models/User");
 const asyncHandler = require("../utils/asyncHandler");
 const generateToken = require("../utils/generateToken");
+const { sanitizeUser } = require("../utils/userSerializer");
+const { returnUpdatedDocument } = require("../utils/mongooseOptions");
 const { AppError } = require("../middleware/errorMiddleware");
-
-const sanitizeUser = (user) => ({
-  id: user._id,
-  name: user.name,
-  email: user.email,
-  role: user.role,
-  phone: user.phone,
-  address: user.address,
-  serviceCategories: user.serviceCategories,
-  serviceArea: user.serviceArea,
-  isAvailable: user.isAvailable,
-  isActive: user.isActive,
-  createdAt: user.createdAt,
-});
 
 const register = asyncHandler(async (req, res) => {
   const {
@@ -99,7 +87,16 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const allowedFields = ["name", "phone", "address", "serviceCategories", "serviceArea", "isAvailable"];
+  const allowedFields = [
+    "name",
+    "phone",
+    "address",
+    "serviceCategories",
+    "serviceArea",
+    "isAvailable",
+    "experienceYears",
+    "idProof",
+  ];
   const updates = {};
 
   allowedFields.forEach((field) => {
@@ -114,10 +111,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     delete updates.isAvailable;
   }
 
-  const user = await User.findByIdAndUpdate(req.user._id, updates, {
-    new: true,
-    runValidators: true,
-  });
+  const user = await User.findByIdAndUpdate(req.user._id, updates, returnUpdatedDocument);
 
   res.json({
     success: true,

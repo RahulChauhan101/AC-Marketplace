@@ -6,13 +6,14 @@ import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import AvailableBookingsScreen from "./src/screens/AvailableBookingsScreen";
 import DashboardScreen from "./src/screens/DashboardScreen";
 import LoginScreen from "./src/screens/LoginScreen";
+import RegisterScreen from "./src/screens/RegisterScreen";
 import MyBookingsScreen from "./src/screens/MyBookingsScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 
 const tabs = [
   { id: "dashboard", label: "Home" },
-  { id: "available", label: "Available" },
-  { id: "jobs", label: "My Jobs" },
+  { id: "available", label: "Available Work" },
+  { id: "jobs", label: "My Work" },
   { id: "profile", label: "Profile" },
 ];
 
@@ -28,6 +29,7 @@ export default function App() {
 function AppShell() {
   const { loading, user } = useAuth();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [authScreen, setAuthScreen] = useState("login");
 
   if (loading) {
     return (
@@ -38,7 +40,11 @@ function AppShell() {
   }
 
   if (!user) {
-    return <LoginScreen />;
+    if (authScreen === "register") {
+      return <RegisterScreen onGoLogin={() => setAuthScreen("login")} />;
+    }
+
+    return <LoginScreen onGoRegister={() => setAuthScreen("register")} />;
   }
 
   const renderScreen = () => {

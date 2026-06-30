@@ -1,3 +1,5 @@
+import { getServiceLabel, getServiceLogo } from "./serviceTypes";
+
 export const formatDate = (value) => {
   if (!value) {
     return "Not scheduled";
@@ -9,5 +11,10 @@ export const formatDate = (value) => {
   }).format(new Date(value));
 };
 
-export const formatService = (value) =>
-  value ? value.replace(/-/g, " ") : "Service";
+export const formatService = (value) => {
+  if (!value) {
+    return "Service";
+  }
+
+  return `${getServiceLogo(value)} ${getServiceLabel(value)}`;
+};

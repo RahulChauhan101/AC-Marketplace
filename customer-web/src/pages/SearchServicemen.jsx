@@ -81,7 +81,7 @@ export default function SearchServicemen() {
               <option value="">All services</option>
               {services.map((service) => (
                 <option key={service.id} value={service.id}>
-                  {service.title}
+                  {service.logo} {service.title}
                 </option>
               ))}
             </select>

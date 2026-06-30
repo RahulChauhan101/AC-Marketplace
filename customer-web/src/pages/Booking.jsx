@@ -113,7 +113,7 @@ export default function Booking() {
               >
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.title}
+                    {service.logo} {service.title}
                   </option>
                 ))}
               </select>
